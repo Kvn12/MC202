@@ -65,6 +65,3 @@ int main(){
     vetor = le_movimentacoes(m, n, fila);
     imprime(vetor, n);
 }
-
-// fila[j] = fila[ind_b + 1 - j]
-// printf("%d\n", ind_a);
