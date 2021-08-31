@@ -15,16 +15,16 @@ int main(){
     char data_ultimo[11];
     Voo voos[TAMANHO_VETOR]; 
     int qtd_voos = 0;
-    int alterar_codigo, alterar_valor, cancelar_codigo;
+    int alterar_codigo, cancelar_codigo;
     int retorno[2]; 
     Data inicio_ferias;
     Data final_ferias;
-    // int valor_data1, valor_data2, valor_data3;
+    float alterar_valor;
 
     while(1){ 
         scanf("%s", instrucao);
         if(strcmp(instrucao, registrar)==0){ //registrar
-            scanf("%d", &voos[qtd_voos].numero_voo); //passando a posiçao, qndo for passar o tamanho, passar qtd+1
+            scanf("%d", &voos[qtd_voos].numero_voo);
             scanf("%s %s", voos[qtd_voos].codigo_de_origem, voos[qtd_voos].codigo_de_destino);
             scanf("%s", data_voo);
             voos[qtd_voos].data_saida = ler_data(data_voo);                                  
@@ -32,7 +32,7 @@ int main(){
             qtd_voos += 1;
         }
         if(strcmp(instrucao, alterar_vet)==0){  //alterar
-            scanf("%d %d", &alterar_codigo, &alterar_valor);
+            scanf("%d %f", &alterar_codigo, &alterar_valor);
             alterar(voos, qtd_voos+1, alterar_codigo, alterar_valor);
         }
         if(strcmp(instrucao, cancelar_vet)==0){ //cancelar
@@ -45,7 +45,7 @@ int main(){
             scanf("%s %s", data_primeiro, data_ultimo);//data
             inicio_ferias = ler_data(data_primeiro);  
             final_ferias = ler_data(data_ultimo); 
-            planejar(voos, qtd_voos, inicio_ferias, final_ferias, planejar_origem, retorno);  
+            planejar(voos, qtd_voos+1, inicio_ferias, final_ferias, planejar_origem, retorno);  
             printf("%d\n", retorno[0]);
             printf("%d", retorno[1]);
             break;
