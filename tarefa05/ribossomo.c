@@ -44,7 +44,9 @@ void imprimir(Alien alien, int n){
     printf("RNA:\t");
     for(i=0;i < n;i++){ 
         printf("%c\t", alien.RNA[i]);
+
     }
+    printf("\n");
 } 
 int main(){
     Padrao padrao;
@@ -71,7 +73,4 @@ int main(){
     free(alien.DNA);
     free(alien.RNA);
     free(alien.ID);
-    free(retorno.DNA);
-    free(retorno.RNA);
-    free(retorno.ID);
 }
