@@ -4,7 +4,7 @@ CFLAGS = -std=c99 -Wall -Werror -Werror=vla -g
 
 all: ribossomo
 
-minecraft: ribossomo.c
+ribossomo: ribossomo.c
 	gcc $(CFLAGS) ribossomo.c -o ribossomo $(LDFLAGS)
 
 clean:
