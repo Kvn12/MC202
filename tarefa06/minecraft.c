@@ -98,6 +98,8 @@ void destruirMundo(int *qtdDima, int *qtdOuro, int *qtdFerro, int *qtdBlocos, Bl
         free(mundo[x]);
         free(altitudes[x]);
     }
+    free(mundo);
+    free(altitudes);
 }
 
 int main(){
