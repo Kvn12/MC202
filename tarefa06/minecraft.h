@@ -1,5 +1,6 @@
 typedef struct {
     // você é livre pra definir o bloco aqui
+    int tipo;
 } Bloco;
 
 // é obrigatório implementar os protótipos seguintes
@@ -28,3 +29,5 @@ double explorarMundo(
 
 // você pode adicionar e implementar outros protótipos
 // que forem necessários
+
+void destruirMundo(int *qtdDima, int *qtdOuro, int *qtdFerro, int *qtdBlocos, Bloco ***mundo, int **altitudes, int m, int n);
