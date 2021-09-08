@@ -30,4 +30,4 @@ double explorarMundo(
 // você pode adicionar e implementar outros protótipos
 // que forem necessários
 
-void destruirMundo(int *qtdDima, int *qtdOuro, int *qtdFerro, int *qtdBlocos, Bloco ***mundo, int **altitudes, int m, int n);
+void destruirMundo(Bloco ***mundo, int **altitudes, int m, int n);

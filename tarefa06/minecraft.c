@@ -5,7 +5,7 @@
 int **calcularAltitudes(int m, int n, int seed){ 
     int a, h, x, z, **altitudes;
 
-    altitudes = malloc(m*sizeof(int));
+    altitudes = malloc(m*sizeof(int*));
     for(a=0;a < m;a++){
         altitudes[a] = malloc(n*sizeof(int));
     }
@@ -85,12 +85,8 @@ void imprimir(int *qtdDiamante, int *qtdOuro, int *qtdFerro, int *qtdBlocos, dou
     printf("Ferros: %d\n", *qtdFerro);
 }
 
-void destruirMundo(int *qtdDima, int *qtdOuro, int *qtdFerro, int *qtdBlocos, Bloco ***mundo, int **altitudes, int m, int n){//recebe todos os ponteiros e da free
+void destruirMundo(Bloco ***mundo, int **altitudes, int m, int n){//recebe todos os ponteiros e da free
     int x,z;
-    free(qtdBlocos);
-    free(qtdDima);
-    free(qtdFerro);
-    free(qtdOuro);
     for(x=0;x < m;x++){
         for(z=0;z < n;z++){
             free(mundo[x][z]);
@@ -103,24 +99,20 @@ void destruirMundo(int *qtdDima, int *qtdOuro, int *qtdFerro, int *qtdBlocos, Bl
 }
 
 int main(){
-    int m, n, seed, **altitudes, *qtdDima, *qtdOuro, *qtdFerro, *qtdBlocos;
+    int m, n, seed, **altitudes;
     double tempoPorBloco, tempoTotal;
     Bloco ***retorno;
-    qtdDima = malloc(sizeof(int));
-    qtdOuro = malloc(sizeof(int));
-    qtdFerro = malloc(sizeof(int));
-    qtdBlocos = malloc(sizeof(int));
-    *qtdDima = 0;
-    *qtdOuro = 0;
-    *qtdFerro = 0;
-    *qtdBlocos = 0;
+    int qtdDima = 0;
+    int qtdOuro = 0;
+    int qtdFerro = 0;
+    int qtdBlocos = 0;
 
     scanf("%d %d", &m, &n);
     scanf("%d", &seed);
     scanf("%lf", &tempoPorBloco);
     altitudes = calcularAltitudes(m, n, seed); 
     retorno = criarMundo(m, n, altitudes, seed); 
-    tempoTotal = explorarMundo(retorno, m, n, altitudes, tempoPorBloco, qtdDima, qtdOuro, qtdFerro, qtdBlocos);
-    imprimir(qtdDima, qtdOuro, qtdFerro, qtdBlocos, tempoTotal);
-    destruirMundo(qtdDima, qtdOuro, qtdFerro, qtdBlocos, retorno, altitudes, m, n);
+    tempoTotal = explorarMundo(retorno, m, n, altitudes, tempoPorBloco, &qtdDima, &qtdOuro, &qtdFerro, &qtdBlocos);
+    imprimir(&qtdDima, &qtdOuro, &qtdFerro, &qtdBlocos, tempoTotal);
+    destruirMundo(retorno, altitudes, m, n);
 }
