@@ -111,7 +111,7 @@ int conferir_dicas_L(int **tabuleiro, int n, int lin){
 int conferir_dicas_R(int **tabuleiro, int n, int lin){
     int i, maior;
     int qtd_predios = 1;
-    
+
     maior = tabuleiro[lin][n];
     for(i=n-1;i > 0;i--){ 
         if(tabuleiro[lin][i] > maior){
@@ -159,17 +159,12 @@ int conferir_dicas_D(int **tabuleiro, int n, int col){
 
     maior = tabuleiro[n][col];
     for(i=n-1;i > 0;i--){
-        // printf("predio:%d\n", tabuleiro[i][col]);
         if(tabuleiro[i][col] > maior){
-
             maior = tabuleiro[i][col];
             qtd_predios += 1;
         }
     }
-    // printf("Coluna %d\n", col);
-    // imprimir(tab
     if(tabuleiro[n+1][col] < qtd_predios){
-        // printf("Qtd:%d, Dica: %d\n", qtd_predios, tabuleiro[n+1][col]);
         return 0;
     }
     else if(tabuleiro[n+1][col] >= qtd_predios){
@@ -182,7 +177,7 @@ int conferir_dicas_D(int **tabuleiro, int n, int col){
 
 void libera_mem(int **tabuleiro, int n){
     int j;
-    for(j=0;j < (n+2);j++){
+    for(j=0;j < (n+3);j++){
         free(tabuleiro[j]);
     }
     free(tabuleiro);
@@ -196,7 +191,6 @@ int main(){
         tabuleiro[i] = malloc((n+3)*sizeof(int));
     }
     recebe_dicas(tabuleiro, n);
-    // imprimir(tabuleiro, n);
     solucionaR(tabuleiro, n, 1, 1); 
     libera_mem(tabuleiro, n);
     return 0;
