@@ -4,7 +4,7 @@
 
 typedef struct No{ 
     int documento;
-    int lanterna;   //n to inicializando com 0
+    int lanterna;   
     char profissao[100];
     char estadoVacinacao[13];
     struct No *prox; 
@@ -18,6 +18,7 @@ p_no adiciona_fim(p_no fila, int documento, char profissao[100], char estadoVaci
 p_no tiraNaoVacinados(p_no proximos);
 
 p_no adiciona(p_no fila, int documento, char profissao[100], char estadoVacincao[13]){
+    //recebe as informaçoes da pessoa e decide em qual local da fila ela será adicionada
     char coach[6] = {"coach"};
     char exbbb[7] = {"ex-bbb"};
     char filhoPolitico[15] = {"filho-politico"};
@@ -32,12 +33,13 @@ p_no adiciona(p_no fila, int documento, char profissao[100], char estadoVacincao
     strcmp(profissao, youtuberFinancas)==0){                             //vai pro começo
         return adiciona_comeco(fila, documento, profissao, estadoVacincao);
     }
-    else{                                                                //Vai pra lanterna  ficar atento ao fiscal
+    else{                                                                //Vai pra lanterna  
         return adiciona_lanterna(fila, documento, profissao, estadoVacincao);
     }
 }
 
 p_no adiciona_comeco(p_no fila, int documento, char profissao[100], char estadoVacincao[13]){ 
+    //adiciona no começo da fila e esta pessoa recebe a lanterna
     p_no novo;
     p_no atual;
     novo = malloc(sizeof(No));
@@ -56,6 +58,7 @@ p_no adiciona_comeco(p_no fila, int documento, char profissao[100], char estadoV
 }
 
 p_no adiciona_lanterna(p_no fila, int documento, char profissao[100], char estadoVacincao[13]){ 
+    //adiciona a pessoa logo atras da que está com a lanterna, e essa recebe a lanterna
     char fiscal[7] = {"fiscal"};
     char Vacinado[9] = {"vacinado"};
     p_no atual;
@@ -67,18 +70,19 @@ p_no adiciona_lanterna(p_no fila, int documento, char profissao[100], char estad
     novo->lanterna = 1;
     for(atual=fila;atual != NULL;atual = atual->prox){  
         if(atual->lanterna == 1){ 
-            atual->lanterna = 0;
-            if(strcmp(atual->profissao, fiscal)==0){  //lanterna e fiscal
+            atual->lanterna = 0;     
+            if(strcmp(atual->profissao, fiscal)==0){               //lanterna e fiscal
                 if(strcmp(novo->estadoVacinacao, Vacinado) == 0){  //novo ta vacinado, logo entra na fila
                     novo->prox = atual->prox;
                     atual->prox = novo;
                     return fila;
                 }
-                else{                                  //o novo n ta vacinado, entao n entra
+                else{                                              //o novo n ta vacinado, entao n entra
+                    atual->lanterna = 1;
                     return fila;
                 }
             }  
-            if(strcmp(novo->profissao, fiscal)==0){    //adiciona o fiscal e os atras dele vazzam
+            if(strcmp(novo->profissao, fiscal)==0){                //adiciona o fiscal e os atras dele vazzam
                 novo->prox = tiraNaoVacinados(atual->prox);    
                 atual->prox = novo;
                 return fila;
@@ -94,7 +98,8 @@ p_no adiciona_lanterna(p_no fila, int documento, char profissao[100], char estad
     return novo;    
 }
 
-p_no adiciona_fim(p_no fila, int documento, char profissao[100], char estadoVacincao[13]){ 
+p_no adiciona_fim(p_no fila, int documento, char profissao[100], char estadoVacincao[13]){
+    //adiciona a pessoa no fim da fila, e esta recebe a lanterna
     p_no novo;
     p_no atual;
     novo = malloc(sizeof(No));
@@ -119,10 +124,10 @@ p_no adiciona_fim(p_no fila, int documento, char profissao[100], char estadoVaci
     return 0;
 }
 
-p_no tiraNaoVacinados(p_no proximos){ //retorna o proximo do novo q esta vacinado
+p_no tiraNaoVacinados(p_no proximos){ 
+    //retorna o proximo depois do fiscal que está vacinado
     char Vacinado[9] = {"vacinado"};
     p_no aux;
-
     for(aux=proximos;aux != NULL;aux = aux->prox){
         if(strcmp(aux->estadoVacinacao, Vacinado) == 0){
             return aux;
@@ -136,6 +141,7 @@ p_no criarFila(){
 }
 
 void impressao(p_no fila){ 
+    //imprime a fila
     p_no atual;
     for(atual=fila; atual != NULL; atual = atual->prox){
         printf("%d %s %s\n", atual->documento, atual->profissao, atual->estadoVacinacao);
@@ -143,6 +149,7 @@ void impressao(p_no fila){
 }
 
 void destruir(p_no fila){
+    //libera a memoria alocada para a fila
     if(fila != NULL){
         destruir(fila->prox);
         free(fila);
