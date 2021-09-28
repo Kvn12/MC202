@@ -124,11 +124,11 @@ int conferir_dicas_R(int **tabuleiro, int n, int lin){
             qtd_predios += 1;
         }
     }
-    if(tabuleiro[lin][n+1] < qtd_predios){ 
-        return 0;
+    if(tabuleiro[lin][n+1] == qtd_predios){ 
+        return 1;
     }
     else{
-        return 1; 
+        return 0; 
     }
     
 }
@@ -167,11 +167,11 @@ int conferir_dicas_D(int **tabuleiro, int n, int col){
             qtd_predios += 1;
         }
     }
-    if(tabuleiro[n+1][col] < qtd_predios){
-        return 0;
+    if(tabuleiro[n+1][col] == qtd_predios){
+        return 1;
     }
     else{
-        return 1; 
+        return 0; 
     }
 }
 
