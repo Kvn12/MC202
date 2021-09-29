@@ -28,15 +28,16 @@ void destruirEquipes(p_no equipe){
 }
 
 void imprimir(p_no equipe){
+    //Imprimi as equipes
     p_no atual;
     for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
         printf("%d\t", atual->altura);
     }
     printf("%d\t", atual->altura);
-    // destruirEquipes(equipe);
 }
 
 p_no inserir(p_no circulo, p_no novo, int m){
+    //insere novos integrantes a roda inicial de amigos
     int cont = 0;
     p_no atual;
     // atual = malloc(sizeof(No));
@@ -57,6 +58,7 @@ p_no inserir(p_no circulo, p_no novo, int m){
 }
 
 void selecionaEquipes(p_no equipe1, p_no equipe2, p_no circulo, int m){
+    //Recebe os sorteios que serao feitos e separa o circulo de amigos em duas equipes
     int i, sorteios[1000];
     for(i=0;i < m;i++){
         scanf("%d", &sorteios[i]);
@@ -77,6 +79,7 @@ void selecionaEquipes(p_no equipe1, p_no equipe2, p_no circulo, int m){
 }
 
 p_no selecionaEsquerda(p_no equipe1,  p_no *circulo, int sortEsq){
+    //Recebe a posicao do integrante q sera sorteado e tira-o do circulo inicial e coloca-o na equipe 1.
     int i;
     p_no atual;
     p_no novo;
@@ -102,6 +105,7 @@ p_no selecionaEsquerda(p_no equipe1,  p_no *circulo, int sortEsq){
 }
 
 p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir){
+    //Recebe a posicao do integrante q sera sorteado e tira-o do circulo inicial e coloca-o na equipe 2.
     int i;
     p_no atual;
     p_no novo;
@@ -128,14 +132,18 @@ p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir){
 }
     
 p_no adicionaEquipe(p_no equipe, p_no novo){    //adiciona na equipe 
+    //Recebe a equipe e o novo integrante a ser adicionado, e adiciona-o em uma posição de acordo com sua altura
+    //de modo que os integrantes fiquem em ordem crescente de altura.
     p_no aux;
 
     if(equipe==NULL){ //se for adicionar o 1
-        novo->direita = equipe;
+        equipe = novo;
+        equipe->direita = novo;
+        equipe->esquerda = novo;
         return novo;
     }
     else{
-        if(equipe->direita==NULL){ //se for adicionar o 2
+        if(equipe->direita==equipe){ //se for adicionar o 2
             if(novo->altura >= equipe->altura){ //se o novo for maior q o 1
                 equipe->direita = novo;
                 equipe->esquerda = novo;
@@ -198,9 +206,6 @@ p_no cria(){
 int main(){
     int m, i;
     p_no circulo, equipe1, equipe2;
-    // circulo = malloc(sizeof(No));
-    // equipe1 = malloc(sizeof(No));
-    // equipe2 = malloc(sizeof(No));
     circulo = cria();
     equipe1 = cria();
     equipe2 = cria();
