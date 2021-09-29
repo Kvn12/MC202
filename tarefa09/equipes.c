@@ -208,10 +208,11 @@ p_no cria(){
 
 void destruirEquipes(p_no equipe){
     //libera a memoria alocada para as equipes
-    if(equipe != NULL){
-        destruirEquipes(equipe->direita);
-        free(equipe);
+    p_no atual;
+    for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
+        free(atual);
     }
+    free(atual);
 }
 
 int main(){
@@ -235,10 +236,3 @@ int main(){
     destruirEquipes(equipe1);
     destruirEquipes(equipe2); 
 }
-
-//./equipes.exe < "testes\teste3.in"
-
-// novo->direita = NULL;
-//             
-//                 aux->direita = novo;
-//                 return equipe2;
