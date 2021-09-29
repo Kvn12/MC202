@@ -17,8 +17,12 @@ p_no adicionaEquipe(p_no equipe, p_no novo);
 void destruirEquipes(p_no equipe){
     //libera a memoria alocada para as equipes
     p_no atual;
-    for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
+    p_no aux;
+    atual = equipe;
+    while(atual->direita != equipe){
+        aux = atual->direita;
         free(atual);
+        atual = aux;
     }
     free(atual);
 }
@@ -29,19 +33,19 @@ void imprimir(p_no equipe){
         printf("%d\t", atual->altura);
     }
     printf("%d\t", atual->altura);
-    destruirEquipes(equipe);
+    // destruirEquipes(equipe);
 }
 
 p_no inserir(p_no circulo, p_no novo, int m){
     int cont = 0;
     p_no atual;
-    atual = malloc(sizeof(No));
+    // atual = malloc(sizeof(No));
     for(atual=circulo;atual != NULL;atual = atual->direita){
         cont += 1;
         if(atual->direita == NULL){
             novo->esquerda = atual;
             atual->direita = novo;
-            if(cont == m-1){    // ver se eh m msm
+            if(cont == m-1){    
                 novo->direita = circulo;
                 circulo->esquerda = novo;
             }
@@ -68,6 +72,8 @@ void selecionaEquipes(p_no equipe1, p_no equipe2, p_no circulo, int m){
     imprimir(equipe1);  
     printf("\n");
     imprimir(equipe2); 
+    destruirEquipes(equipe1);
+    destruirEquipes(equipe2);
 }
 
 p_no selecionaEsquerda(p_no equipe1,  p_no *circulo, int sortEsq){
@@ -192,9 +198,9 @@ p_no cria(){
 int main(){
     int m, i;
     p_no circulo, equipe1, equipe2;
-    circulo = malloc(sizeof(No));
-    equipe1 = malloc(sizeof(No));
-    equipe2 = malloc(sizeof(No));
+    // circulo = malloc(sizeof(No));
+    // equipe1 = malloc(sizeof(No));
+    // equipe2 = malloc(sizeof(No));
     circulo = cria();
     equipe1 = cria();
     equipe2 = cria();
