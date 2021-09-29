@@ -59,16 +59,14 @@ p_no inserir(p_no circulo, p_no novo, int m){
 
 void selecionaEquipes(p_no equipe1, p_no equipe2, p_no circulo, int m){
     //Recebe os sorteios que serao feitos e separa o circulo de amigos em duas equipes
-    int i, sorteios[1000];
+    int i, sorteio;
     for(i=0;i < m;i++){
-        scanf("%d", &sorteios[i]);
-    }
-    for(i=0;i < m;i++){
+        scanf("%d", &sorteio);
         if((i+1)%2 != 0){           //corre para a esquerda
-        equipe1 = selecionaEsquerda(equipe1, &circulo, sorteios[i]);
+        equipe1 = selecionaEsquerda(equipe1, &circulo, sorteio);
         }
         else{                       //corre para a direita
-        equipe2 = selecionaDireita(equipe2, &circulo, sorteios[i]);   
+        equipe2 = selecionaDireita(equipe2, &circulo, sorteio);   
         } 
     }
     imprimir(equipe1);  
