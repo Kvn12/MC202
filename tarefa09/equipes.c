@@ -14,12 +14,22 @@ p_no selecionaEsquerda(p_no equipe1,  p_no *circulo, int sortEsq);
 p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir);
 p_no adicionaEquipe(p_no equipe, p_no novo);
 
+void destruirEquipes(p_no equipe){
+    //libera a memoria alocada para as equipes
+    p_no atual;
+    for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
+        free(atual);
+    }
+    free(atual);
+}
+
 void imprimir(p_no equipe){
     p_no atual;
     for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
         printf("%d\t", atual->altura);
     }
     printf("%d\t", atual->altura);
+    destruirEquipes(equipe);
 }
 
 p_no inserir(p_no circulo, p_no novo, int m){
@@ -49,11 +59,9 @@ void selecionaEquipes(p_no equipe1, p_no equipe2, p_no circulo, int m){
     }
     for(i=0;i < m;i++){
         if((i+1)%2 != 0){           //corre para a esquerda
-        // printf("esquerda, %d\n", sorteios[i]);
         equipe1 = selecionaEsquerda(equipe1, &circulo, sorteios[i]);
         }
         else{                       //corre para a direita
-        // printf("direita, %d\n", sorteios[i]);
         equipe2 = selecionaDireita(equipe2, &circulo, sorteios[i]);   
         } 
     }
@@ -76,33 +84,15 @@ p_no selecionaEsquerda(p_no equipe1,  p_no *circulo, int sortEsq){
         atual->direita->esquerda = atual->esquerda;
         atual->esquerda->direita = atual->direita;               
         novo->altura = atual->altura;
-        // printf("if %d\n", novo->altura);
-        // circulo = atual->direita;
         free(atual);
     }
     else{
         atual->direita->esquerda = atual->esquerda;
         atual->esquerda->direita = atual->direita;               
         novo->altura = atual->altura;
-        // printf("else %d\n", novo->altura);
         free(atual);
     }
-    //adiciona na equipe
     return adicionaEquipe(equipe1, novo);
-    // if(equipe1==NULL){
-    //     novo->direita = equipe1;
-    //     return novo;
-    // }
-    // else{
-    //     for(aux=equipe1;aux != NULL;aux=aux->direita){
-    //         if(aux->direita==NULL){
-    //             novo->direita = NULL;
-    //             aux->direita = novo;
-    //             return equipe1;
-    //         }
-    //     }
-    // }
-    // return 0;
 }
 
 p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir){
@@ -110,9 +100,7 @@ p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir){
     p_no atual;
     p_no novo;
     novo = malloc(sizeof(No));
-    // if(circulo->esquerda == circulo){
-    //     return equipe2;
-    // }
+
     atual = *circulo;
     for(i=1;i < sortDir;i++){   
         atual = atual->direita;
@@ -122,17 +110,12 @@ p_no selecionaDireita(p_no equipe2,  p_no *circulo, int sortDir){
         atual->esquerda->direita = atual->direita;   
         novo->altura = atual->altura;
         *circulo = (*circulo)->direita;
-        // printf("if %d\n", novo->altura);
         free(atual);
     }    
     else{
-        // printf("1\n");
         atual->direita->esquerda = atual->esquerda;
-        // printf("2\n");
         atual->esquerda->direita = atual->direita;  
-        // printf("3\n"); 
         novo->altura = atual->altura;
-        // printf("else %d\n", novo->altura);
         free(atual);
     }
     return adicionaEquipe(equipe2, novo);
@@ -206,15 +189,6 @@ p_no cria(){
     return NULL;
 }
 
-void destruirEquipes(p_no equipe){
-    //libera a memoria alocada para as equipes
-    p_no atual;
-    for(atual=equipe;atual->direita != equipe;atual=atual->direita){ 
-        free(atual);
-    }
-    free(atual);
-}
-
 int main(){
     int m, i;
     p_no circulo, equipe1, equipe2;
@@ -233,6 +207,4 @@ int main(){
         circulo = inserir(circulo, novo, m);
     }
     selecionaEquipes(equipe1, equipe2, circulo, m);
-    destruirEquipes(equipe1);
-    destruirEquipes(equipe2); 
 }
