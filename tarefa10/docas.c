@@ -95,7 +95,7 @@ int carregar(p_doca *porto, p_navio atual, int num_docas, char mercadoria[21]){
                     porto[i]->topo -=1;         
                     carregado +=1;
                 }
-                printf("%s carrega %s doca: %d conteineres: %d\n", atual->nome, atual->mercadoria, i, carregado); 
+                printf("%s\tcarrega\t%s\tdoca:\t%d\tconteineres:\t%d\n", atual->nome, atual->mercadoria, i, carregado); 
                 return 1;
             }
         }
@@ -115,7 +115,7 @@ int descarrega(p_doca *porto, p_navio atual, int num_docas, int capaci_docas){
                 atual->qtd_atual += 1;
                 descarregado += 1;
             }
-            printf("%s descarrega %s doca: %d conteineres: %d\n", atual->nome, atual->mercadoria, i, descarregado);
+            printf("%s\tdescarrega\t%s\tdoca:\t%d\tconteineres:\t%d\n", atual->nome, atual->mercadoria, i, descarregado);
             return 1;                                       
         }
     }
@@ -153,7 +153,7 @@ void fluxoPorto(p_navio fila, p_doca *porto, int num_docas, int num_navios, int 
     }
     remanescentes = verificaFim(fila);
     if(remanescentes){                  
-        printf("ALERTA: impossivel esvaziar fila, restam %d navios.\n", remanescentes);
+        printf("ALERTA:\timpossivel\tesvaziar\tfila,\trestam\t%d\tnavios.\n", remanescentes);
     }
 }
 
