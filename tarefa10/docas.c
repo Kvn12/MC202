@@ -153,7 +153,7 @@ void fluxoPorto(p_navio fila, p_doca *porto, int num_docas, int num_navios, int 
     }
     remanescentes = verificaFim(fila);
     if(remanescentes){                  
-        printf("ALERTA:\timpossivel\tesvaziar\tfila,\trestam\t%d\tnavios.\n", remanescentes);
+        printf("ALERTA: impossivel esvaziar fila, restam %d navios.\n", remanescentes);
     }
 }
 
