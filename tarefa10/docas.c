@@ -129,7 +129,8 @@ void fluxoPorto(p_navio fila, p_doca *porto, int num_docas, int num_navios, int 
     int i, movimentacao;
     int remanescentes = 0;
     p_navio atual;
-    char carrega[9] = {"carrega"}; 
+    char carrega[9] = {"carrega"};
+    movimentacao = 1;
     while(movimentacao != 0 ){ 
         movimentacao = 0;
         atual = fila;
@@ -168,6 +169,7 @@ void destroiPorto(p_doca *porto, int num_docas, int capaci_docas){  // arrumar i
         for(j=0;j < capaci_docas;j++){
             free(porto[i]->pilha[j]);
         }
+        free(porto[i]->pilha);
         free(porto[i]);
     }
     free(porto);
