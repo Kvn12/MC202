@@ -28,14 +28,6 @@ int filaVazia(p_fila fila);
 void imprime(p_no *raiz);
 void destroiFila(p_fila fila);
 
-// void destroiFila(p_fila fila){
-//     //libera a memoria alocada para a fila
-//     if(fila != NULL){
-//         destroiFila(fila->prox);
-//         free(fila);
-//     }
-// }
-
 p_no recebeEventos(p_no piramide){
     //Recebe as estradas e chama a funcao para adicionar na piramide o novo integrante. 
     p_no topo;
@@ -149,11 +141,10 @@ void imprime(p_no *raiz){
     printf("\n");
     printf("\n");
     free(fila);
-    // destroiFila(fila);
 }
 
 p_fila adicionarFila(p_fila fila, p_no raiz){
-    //Adiciona um novo nó na fila que e suporte para a funcao de impressao.
+    //Adiciona um novo nó na fila que e auxiliar para a funcao de impressao.
     p_fila novo;
     p_fila atual;
     novo = malloc(sizeof(*fila));
@@ -203,7 +194,7 @@ void destroiPiramide(p_no piramide){
 
 int main(){
     p_no piramide;
-    piramide = malloc(sizeof(No));
+    piramide = NULL;
     piramide = recebeEventos(piramide);
     destroiPiramide(piramide);
 }
