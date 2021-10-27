@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+//Struct para a arvore AVL de dominios.
 typedef struct No{ 
     char IP[17]; 
     char dominio[101];
@@ -9,6 +10,7 @@ typedef struct No{
     struct No *esq, *dir;
 } No;
 
+//Struct para a arvore AVL de requisitantes.
 typedef struct Requests{
     char ip[17];
     int acessos;
@@ -36,8 +38,7 @@ p_req rotacionaEsq2(p_req raiz);
 int alt2(p_req raiz);
 int verBalanceamento2(p_req raiz);
 
-void imprime(p_no raiz);
-
+//Abre uma entrada para cada dominio e direciona os para serem inseridos em uma arvore balanceada AVL.
 p_no recebeArvore(p_no raiz, int n){
     int i; 
     char IP[17], dominio[101];
@@ -48,6 +49,7 @@ p_no recebeArvore(p_no raiz, int n){
     return raiz;
 }
 
+//Insere recursivamente os novos dominios na arvore balanceada AVL.
 p_no inserir(p_no raiz, char IP[17], char dominio[101]){
     p_no novo;
     int balanceamento;
@@ -83,10 +85,10 @@ p_no inserir(p_no raiz, char IP[17], char dominio[101]){
         raiz->dir = rotacionaDir(raiz->dir);
         return rotacionaEsq(raiz);
     }
-
     return raiz;
 }
 
+//Realiza a rotacao para a direita dos nos na arvore.
 p_no rotacionaDir(p_no raiz){
     p_no x = raiz->esq;
     p_no y = x->dir;
@@ -99,13 +101,10 @@ p_no rotacionaDir(p_no raiz){
     return x;
 }
 
+//Realiza a rotacao para a esquerda dos nos da arvore.
 p_no rotacionaEsq(p_no raiz){
-
-    // printf("rotaciona %s\n", raiz->dir->dominio);
     p_no x = raiz->dir;
     p_no y = x->esq;
-
-    // printf("DENTRO um\n");
     
     x->esq = raiz;
     raiz->dir = y;
@@ -115,6 +114,7 @@ p_no rotacionaEsq(p_no raiz){
     return x;
 }
 
+//Recebe um no e devolve a sua altura.
 int alt(p_no raiz){
     if(raiz == NULL){
         return 0;
@@ -124,6 +124,7 @@ int alt(p_no raiz){
     }
 }
 
+//Dados dois inteiros, compara-os e devolve o maior.
 int max(int x, int y){
     if(x > y){
         return x;
@@ -133,6 +134,7 @@ int max(int x, int y){
     }
 }
 
+//Dado um no, devolve a diferenca de alturas de seus nos filhos.
 int verBalanceamento(p_no raiz){
     if(raiz == NULL){
         return 0;
@@ -142,6 +144,7 @@ int verBalanceamento(p_no raiz){
     }
 }
 
+//Abre uma entrada para cada requerimento de acesso aos dominios, e insere os requisitantes em uma outra arvore balanceada AVL.
 void recebeRequest(p_no raiz, int m, int u){ 
     p_req requests;
     requests = NULL;
@@ -165,6 +168,9 @@ void recebeRequest(p_no raiz, int m, int u){
     destroiArvore2(requests);
 }
 
+//Procura recursivamente por um requisitante na arvore, se ele existir, aumenta em 1 o seu numero de acessos e copia esse numero 
+//para uma variavel controle, que sera usada na funcao anterior; porem se o requisitante nao existir, cria-se um novo no para ele
+//e insere-o de modo a manter o balanceamento da arvore.
 p_req inserirReq(p_req raiz, char ipOrigem[17], int *controle){
     p_req novo;
     int balanceamento;
@@ -206,10 +212,10 @@ p_req inserirReq(p_req raiz, char ipOrigem[17], int *controle){
         raiz->dir = rotacionaDir2(raiz->dir);
         return rotacionaEsq2(raiz);
     }
-
     return raiz;
 }
 
+//Realiza a rotacao para a direita dos nos na arvore dos requisitantes.
 p_req rotacionaDir2(p_req raiz){
     p_req x = raiz->esq;
     p_req y = x->dir;
@@ -222,14 +228,11 @@ p_req rotacionaDir2(p_req raiz){
     return x;
 }
 
+//Realiza a rotacao para a esquerda dos nos na arvore dos requisitantes.
 p_req rotacionaEsq2(p_req raiz){
-
-    // printf("rotaciona %s\n", raiz->dir->dominio);
     p_req x = raiz->dir;
     p_req y = x->esq;
 
-    // printf("DENTRO um\n");
-    
     x->esq = raiz;
     raiz->dir = y;
 
@@ -238,6 +241,7 @@ p_req rotacionaEsq2(p_req raiz){
     return x;
 }
 
+//Recebe um no da arvore de requisitantes e devolve a sua altura.
 int alt2(p_req raiz){
     if(raiz == NULL){
         return 0;
@@ -247,6 +251,7 @@ int alt2(p_req raiz){
     }
 }
 
+//Dado um no da arvore de requisitantes, devolve a diferenca de alturas de seus nos filhos.
 int verBalanceamento2(p_req raiz){
     if(raiz == NULL){
         return 0;
@@ -256,30 +261,7 @@ int verBalanceamento2(p_req raiz){
     }
 }
 
-// p_req inserirReq(p_req raiz, char ipOrigem[17], int *controle){  
-//     p_req novo;
-//     if(raiz == NULL){
-//         novo = malloc(sizeof(Requests));
-//         novo->dir = novo->esq = NULL;
-//         strcpy(novo->ip, ipOrigem);
-//         novo->acessos = 1;
-//         (*controle) = 1;
-//         return novo;
-//     }
-//     if(strcmp(raiz->ip, ipOrigem) == 0){
-//         raiz->acessos += 1;
-//         (*controle) = raiz->acessos;
-//         return raiz;
-//     }
-//     if(strcmp(raiz->ip, ipOrigem) < 0){
-//         raiz->esq = inserirReq(raiz->esq, ipOrigem, controle);
-//     }
-//     else{
-//         raiz->dir = inserirReq(raiz->dir, ipOrigem, controle);
-//     }
-//     return raiz;
-// }
-
+//Realiza uma busca binaria na arvore de dominios e imprime se o dominio foi encontrado.
 int buscarDominio(p_no raiz, char ipOrigem[17], char dominio[101], int *retorno){  
     if(raiz == NULL || strcmp(raiz->dominio, dominio) == 0){
         if(raiz != NULL && strcmp(raiz->dominio, dominio) == 0){  
@@ -297,6 +279,7 @@ int buscarDominio(p_no raiz, char ipOrigem[17], char dominio[101], int *retorno)
     return *retorno;
 }
 
+//Libera a memoria alocada para a arvore de dominios.
 void destroiArvore(p_no raiz){
     if(raiz != NULL){
         destroiArvore(raiz->esq);
@@ -305,6 +288,7 @@ void destroiArvore(p_no raiz){
     }
 }
 
+//Libera a memoria alocada para a arvore de requisitantes.
 void destroiArvore2(p_req raiz){
     if(raiz != NULL){
         destroiArvore2(raiz->esq);
@@ -313,22 +297,14 @@ void destroiArvore2(p_req raiz){
     }
 }
 
-void imprime(p_no raiz){
-    if(raiz != NULL){
-        imprime(raiz->esq);
-        printf("%s\n", raiz->dominio);
-        imprime(raiz->dir);
-    }
-}
-
 int main(){
     int u, n, m;
     p_no raiz;
     raiz = NULL;
+
     scanf("%d", &u);
     scanf("%d", &n);
     raiz = recebeArvore(raiz, n);
-
     scanf("%d", &m);
     recebeRequest(raiz, m, u); 
     destroiArvore(raiz); 
