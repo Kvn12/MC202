@@ -10,18 +10,18 @@ typedef struct {
 
 typedef No * p_no;
 
-int hash(char palavra[50], int tamanho);
 p_no criaHash(p_no *nuvem, int tamanho);
-p_no adicionaNuvem(p_no *nuvem, char palavra[50], int tamanho, int *adicionados);
-p_no adicionaStop(p_no *nuvem, char palavra[50], int tamanho);
-int ehStopWord(p_no *StopWords, char palavra[50], int qtdStop);
-char convertePalavra(char palavra[50]);
 p_no separar(p_no *nuvem, p_no *ordenar, int tamanhoNuvem);
-void quickSort(p_no *vetor, int e, int d);
-int particiona(p_no *vetor, int e, int d);
+p_no adicionaStop(p_no *nuvem, char palavra[50], int tamanho);
+p_no adicionaNuvem(p_no *nuvem, char palavra[50], int tamanho, int *adicionados);
 void imprimir(p_no *vetor);
-int particionaPalavras(p_no *vetor, int e, int d);
+void quickSort(p_no *vetor, int e, int d);
+char convertePalavra(char palavra[50]);
+int hash(char palavra[50], int tamanho);
+int particiona(p_no *vetor, int e, int d);
+int ehStopWord(p_no *StopWords, char palavra[50], int qtdStop);
 
+/*Calcula p hash de determinada palavras pelo metodo da divisao.*/
 int hash(char palavra[50], int tamanho){
     int i, n;
     n = 0;
@@ -31,6 +31,7 @@ int hash(char palavra[50], int tamanho){
     return n;
 }
 
+/*Percorre cada posicao do vetor e atribui NULL para cada posicao.*/
 p_no criaHash(p_no *nuvem, int tamanho){ 
     int i;
     for(i=0;i < tamanho;i++){
@@ -39,6 +40,8 @@ p_no criaHash(p_no *nuvem, int tamanho){
     return *nuvem;
 }
 
+/*Adiciona as palavras no vetor com base em seu hash, e se ja existir alguma palavras com aquele hash, adiciona no proximo espaco vazio do vetor.
+Alem disso, adiciona 1 na variavel adicionados cada vez que uma nova palavra e adicionada.*/
 p_no adicionaNuvem(p_no *nuvem, char palavra[50], int tamanho, int *adicionados){ 
     int n, i, j;
     p_no novo;
@@ -87,52 +90,54 @@ p_no adicionaNuvem(p_no *nuvem, char palavra[50], int tamanho, int *adicionados)
     return *nuvem;
 }
 
-p_no adicionaStop(p_no *nuvem, char palavra[50], int tamanho){ 
+/*Adiciona as stopWords no vetor com base no seu hash, e se ja existir alguma palavra com aquele hash, adiciona no proximo espaco vazio do vetor.*/
+p_no adicionaStop(p_no *stopWords, char palavra[50], int tamanho){ 
     int n, i, j;
     p_no novo;
     n = hash(palavra, tamanho);
 
-    if(nuvem[n] == NULL){
+    if(stopWords[n] == NULL){
         novo = malloc(sizeof(No));
         novo->qtd = 1;
         strcpy(novo->palavra, palavra);
-        nuvem[n] = novo;
+        stopWords[n] = novo;
     }
-    else if(strcmp(nuvem[n]->palavra, palavra) == 0){
-        nuvem[n]->qtd += 1;
+    else if(strcmp(stopWords[n]->palavra, palavra) == 0){
+        stopWords[n]->qtd += 1;
     }  
     else{
         for(i=n;i < tamanho;i++){ 
-            if(nuvem[i] == NULL){
+            if(stopWords[i] == NULL){
                 novo = malloc(sizeof(No));
                 novo->qtd = 1;
                 strcpy(novo->palavra, palavra);
-                nuvem[i] = novo;
-                return *nuvem;                
+                stopWords[i] = novo;
+                return *stopWords;                
             }
-            else if(strcmp(nuvem[i]->palavra, palavra) == 0){ 
-                nuvem[i]->qtd += 1;
-                return *nuvem;
+            else if(strcmp(stopWords[i]->palavra, palavra) == 0){ 
+                stopWords[i]->qtd += 1;
+                return *stopWords;
             }
         }
         for(j=0;j < n;j++){
-            if(nuvem[j] == NULL){
+            if(stopWords[j] == NULL){
                 novo = malloc(sizeof(No));
                 novo->qtd = 1;
                 strcpy(novo->palavra, palavra);
-                nuvem[j] = novo;
-                return *nuvem;                
+                stopWords[j] = novo;
+                return *stopWords;                
             }
-            else if(strcmp(nuvem[j]->palavra, palavra) == 0){ 
-                nuvem[j]->qtd += 1;
-                return *nuvem;
+            else if(strcmp(stopWords[j]->palavra, palavra) == 0){ 
+                stopWords[j]->qtd += 1;
+                return *stopWords;
             } 
         }
     }
-    return *nuvem;
+    return *stopWords;
 }
 
-int ehStopWord(p_no *StopWords, char palavra[50], int qtdStop){  //retornar 1 se achar
+/*Procura uma palavra no vetor de hash stopwords, e se ela estiver la retorna 1.*/
+int ehStopWord(p_no *StopWords, char palavra[50], int qtdStop){  
     int n, i, j;
 
     if(palavra[1] == '\0'){
@@ -167,6 +172,7 @@ int ehStopWord(p_no *StopWords, char palavra[50], int qtdStop){  //retornar 1 se
     return 0;
 }
 
+/*Recebe um vetor de caracteres, tira os caracteres que nao sao letras e converte as letras maiusculas em minusculas.*/
 char convertePalavra(char palavra[50]){
     int i, j;
     for(i=0;palavra[i] != '\0';i++){
@@ -183,6 +189,7 @@ char convertePalavra(char palavra[50]){
     return palavra[50];
 }
 
+/*Percorre o vetor nuvem, que possui muitos espacos vazios, e os termos que nao sao vazios sao adicionados no vetor ordenar.*/
 p_no separar(p_no *nuvem, p_no *ordenar, int tamanhoNuvem){
     int i, k;
     k = 0;
@@ -195,6 +202,7 @@ p_no separar(p_no *nuvem, p_no *ordenar, int tamanhoNuvem){
     return *ordenar;
 }
 
+/*Ordena o vetor em ordem decressiva pelo metodo quicksort.*/
 void quickSort(p_no *vetor, int e, int d){
     int i;
     if(d <= e){
@@ -205,6 +213,8 @@ void quickSort(p_no *vetor, int e, int d){
     quickSort(vetor, i+1, d);
 }
 
+/*Particiona o vetor e ordena os termos em ordem decressiva em funcao a um pivo do vetor para ordena-los com base no valor 'qtd', e se este for igual, 
+ordena lexicograficamente.*/
 int particiona(p_no *vetor, int e, int d){
     int i, pos = d+1;
     int pivo = vetor[e]->qtd;
@@ -223,6 +233,7 @@ int particiona(p_no *vetor, int e, int d){
     return pos-1;
 }
 
+/*Recebe um vetor e imprime os 50 primeiros termos, que sao os maiores.*/
 void imprimir(p_no *vetor){
     int i;
     for(i=0;i < 50;i++){
@@ -230,6 +241,7 @@ void imprimir(p_no *vetor){
     }
 }
 
+/*Recebe um vetor alocado dinamicamente e libera a memoria alocada.*/
 void liberaMem(p_no *vetor, int tamanho){
     int i;
     for(i=0;i < tamanho;i++){
@@ -243,10 +255,8 @@ void liberaMem(p_no *vetor, int tamanho){
 int main(){
     int i, qtdPalavras, qtdStopWords, adicionados = 0;;
     char stopWord[50], palavra[50];
-    p_no *stop;
-    p_no *nuvem;
-    p_no *ordenar;
-
+    p_no *stop, *nuvem, *ordenar;
+  
     scanf("%d", &qtdPalavras);
     scanf("%d", &qtdStopWords);
 
@@ -255,25 +265,25 @@ int main(){
     *nuvem = criaHash(nuvem, qtdPalavras);
     *stop = criaHash(stop, qtdStopWords);
 
-    for(i=0;i < qtdStopWords;i++){ /*Recebe StopWords*/
+    /*Recebe StopWords*/
+    for(i=0;i < qtdStopWords;i++){ 
         scanf("%s", stopWord);
         *stop = adicionaStop(stop, stopWord, qtdStopWords);
     }
-    while(scanf("%s", palavra) != EOF){ /*Recebe as palavras*/
+    /*Recebe as palavras*/
+    while(scanf("%s", palavra) != EOF){ 
         palavra[50] = convertePalavra(palavra); 
-        if(!ehStopWord(stop, palavra, qtdStopWords)){ /*Devolve 1 se for*/
+        if(!ehStopWord(stop, palavra, qtdStopWords)){
             *nuvem = adicionaNuvem(nuvem, palavra, qtdPalavras, &adicionados); 
         }
     }
+
     ordenar = malloc(adicionados*sizeof(p_no));
     *ordenar = separar(nuvem, ordenar, qtdPalavras);
     quickSort(ordenar, 0, adicionados-1); 
     imprimir(ordenar);  
 
-
     liberaMem(nuvem, qtdPalavras);
     liberaMem(stop, qtdStopWords);
     free(ordenar);
-
-    // valgrind --leak-check=full ./nuvem < "testes/1_RitaOra.in"
 }
