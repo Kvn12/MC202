@@ -17,19 +17,20 @@ typedef struct{
 
 typedef Grafo * p_grafo;
 
-p_grafo recebeCelas();
-void recebeJogadores(p_grafo celas);
-p_grafo criaCelas(int tamanho);
-p_grafo insereAresta(p_grafo celas, int pos, int forca, int destreza, int constituicao, int inteligencia, int sabedoria, int carisma, char nome[30]);
-p_grafo procuraAdj(p_grafo celas);
 int comparaAtributos(p_no a, p_no b);
-p_grafo simulaMovimentos(p_grafo celas, int pos);
 int pegaIndice(p_grafo celas, p_no atual);
+int verificaIndice(int *vetor, int tamanho, int i);
 void imprime(p_grafo celas, int qtdJogadores);
 void destroiCelas(p_grafo celas);
 void destroiLista(p_no listaAdj);
-int verificaIndice(int *vetor, int tamanho, int i);
+void recebeJogadores(p_grafo celas);
+p_grafo recebeCelas();
+p_grafo criaCelas(int tamanho);
+p_grafo procuraAdj(p_grafo celas);
+p_grafo simulaMovimentos(p_grafo celas, int pos);
+p_grafo insereAresta(p_grafo celas, int pos, int forca, int destreza, int constituicao, int inteligencia, int sabedoria, int carisma, char nome[30]);
 
+/*Recebe os atributos das celas e cria os vertices do grafo com os atributos.*/
 p_grafo recebeCelas(){
     int qtd, i, forca, destreza, constituicao, inteligencia, sabedoria, carisma;
     char nome[30]; 
@@ -44,6 +45,7 @@ p_grafo recebeCelas(){
     return celas;
 }
 
+/*Recebe os atributos dos jogadores e simula as posiveis jogadas que ele pode fazer.*/
 void recebeJogadores(p_grafo celas){
     int qtd, i, j, forca, destreza, constituicao, inteligencia, sabedoria, carisma;
     char nome[30];
@@ -62,6 +64,7 @@ void recebeJogadores(p_grafo celas){
     imprime(celas, qtd);
 }
 
+/*Aloca a memoria para os vertices do grafo.*/
 p_grafo criaCelas(int tamanho){ 
     int i;
     p_grafo celas;
@@ -74,6 +77,7 @@ p_grafo criaCelas(int tamanho){
     return celas;
 }
 
+/*Insere uma nova aresta no vertice de posicao "pos".*/
 p_grafo insereAresta(p_grafo celas, int pos, int forca, int destreza, int constituicao, int inteligencia, int sabedoria, int carisma, char nome[30]){  
     p_no atual;
     p_no novo = malloc(sizeof(No));
@@ -94,6 +98,7 @@ p_grafo insereAresta(p_grafo celas, int pos, int forca, int destreza, int consti
     return celas;
 }
 
+/*Percorre todos os vertices do grafo e verifica se podem ser adjacentes e adiciona arestas quando sao.*/
 p_grafo procuraAdj(p_grafo celas){
     int i, j;
     for(i=0;i < celas->tamanho;i++){
@@ -109,12 +114,8 @@ p_grafo procuraAdj(p_grafo celas){
     return celas;
 }
 
+/*Compara os atributos de dois vertices e se der para um jogador se locomover do vertice a para o b retorna 1, de modo a serem adjacentes.*/
 int comparaAtributos(p_no a, p_no b){ 
-    // int somaA = a->carisma + a->constituicao + a->destreza + a->forca + a->inteligencia + a->sabedoria;
-    // int somaB = b->carisma + b->constituicao + b->destreza + b->forca + b->inteligencia + b->sabedoria;
-    // if(somaA + 1 >= somaB){
-    //     return 1;
-    // }
     if((a->carisma +1 >= b->carisma && a->constituicao >= b->constituicao && a->destreza >= b->destreza &&  a->forca >= b->forca && 
     a->inteligencia >= b->inteligencia && a->sabedoria >= b->sabedoria) ||
     (a->carisma >= b->carisma && a->constituicao+1 >= b->constituicao && a->destreza >= b->destreza &&  a->forca >= b->forca && 
@@ -134,6 +135,7 @@ int comparaAtributos(p_no a, p_no b){
     }
 }
 
+/*Simula as possiveis movimentacoes de um jogador ao adicionar o valor 1 no contador dos vertices que ele pode ir em ate 2 rodadas.*/
 p_grafo simulaMovimentos(p_grafo celas, int pos){
     p_no atual1, atual2;
     int indice1, indice2, i = 0, j;
@@ -143,21 +145,14 @@ p_grafo simulaMovimentos(p_grafo celas, int pos){
     for(j=0;j < celas->tamanho;j++){
         indVisitados[j] = -1;
     }
-
-    // celas->adj[pos]->cont += 1;
-    for(atual1=celas->adj[pos]->prox;atual1 != NULL;atual1=atual1->prox){ //ele ta passando em uma, ai dps ta passando nessa dinovo
+    for(atual1=celas->adj[pos]->prox;atual1 != NULL;atual1=atual1->prox){ 
         indice1 = pegaIndice(celas, atual1);
-
         if(!verificaIndice(indVisitados, celas->tamanho, indice1)){
             indVisitados[i] = indice1;
             celas->adj[indice1]->cont += 1;
             i ++;
         }
         for(atual2=celas->adj[indice1]->prox;atual2 != NULL;atual2=atual2->prox){   
-            // if(strcmp(atual2->nome, celas->adj[pos]->nome) != 0){
-                // indice2 = pegaIndice(celas, atual2);
-                // celas->adj[indice2]->cont += 1;
-            // }
             indice2 = pegaIndice(celas, atual2);
             if(!verificaIndice(indVisitados, celas->tamanho, indice2)){
                 indVisitados[i] = indice2;
@@ -170,6 +165,7 @@ p_grafo simulaMovimentos(p_grafo celas, int pos){
     return celas;
 }
 
+/*Percorre os vertices do grafo e retorna o indice do vertice "atual" desejado.*/
 int pegaIndice(p_grafo celas, p_no atual){
     int i;    
     for(i=0;i < celas->tamanho;i++){
@@ -180,7 +176,8 @@ int pegaIndice(p_grafo celas, p_no atual){
     return 0;
 }
 
-int verificaIndice(int *vetor, int tamanho, int i){ //retorna 1 se estivber la
+/*Pecorre o vetor auxiliar a funcao "simulaMovimentos e se encontrar o valor i em alguma posicao retorna 1.*/
+int verificaIndice(int *vetor, int tamanho, int i){ 
     int j;
     for(j=0;j < tamanho;j++){
         if(vetor[j] == i){
@@ -190,6 +187,7 @@ int verificaIndice(int *vetor, int tamanho, int i){ //retorna 1 se estivber la
     return 0;
 }
 
+/*Percorre os vertices do grafo e imprime os que todos os jogadores conseguem percorrer em ate duas jogadas.*/
 void imprime(p_grafo celas, int qtdJogadores){
     int i;
     int controle = 0;
@@ -204,6 +202,7 @@ void imprime(p_grafo celas, int qtdJogadores){
     }
 }
 
+/*Libera a memoria alocada para o grafo.*/
 void destroiCelas(p_grafo celas){
     int i;
     for(i=0;i < celas->tamanho;i++){
@@ -213,6 +212,7 @@ void destroiCelas(p_grafo celas){
     free(celas);
 }
 
+/*Libera a memoria alocada para as listas de adjacencia do grafo.*/
 void destroiLista(p_no listaAdj){
     if(listaAdj != NULL){
         destroiLista(listaAdj->prox);
@@ -227,6 +227,3 @@ int main(){
     recebeJogadores(celas);
     destroiCelas(celas);
 }
-
-
-//visitar a seguinte da cela e as outras seguintes dessa e qndo visitar adiciona 1 no contador, as celas q tiverem a msm quantidade q de jogadores imprime
