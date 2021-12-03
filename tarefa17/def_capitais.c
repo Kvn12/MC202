@@ -6,6 +6,7 @@
 #define F_ESQ(i) (2*i+1)
 #define F_DIR(i) (2*i+2)
 
+/*Struct No usada para o grafo e para a fila de prioridades tambem.*/
 typedef struct No{
     char nome[50];
     int populacao;
@@ -14,29 +15,40 @@ typedef struct No{
     int ind_grafo;
     int apto;
 } No;
-
 typedef No * p_no;
 
+/*Struct Grafo que representa o grafo.*/
 typedef struct{
     p_no *adj;
     int tamanho;
 } Grafo;
-
 typedef Grafo * p_grafo;
 
+/*Struct FP que representa a fila de prioridades.*/
 typedef struct {
     No *v;
     int n, tamanho;
 } FP; 
-
 typedef FP * p_fp;
 
+int vazia(p_fp fila);
+int extrai_minimo(p_fp fila);
+int particiona(p_no *vetor, int e, int d);
+int procuraIndice(p_fp fila, char nome[50]);
+int pegaIndice(p_grafo cidades, char atual[50]);
+void troca(No *x, No *y);
+void destroiFP(p_fp fila);
 void imprimir(p_grafo cidades);
+void sobeHeap(p_fp fila, int n);
 void destroiLista(p_no listaAdj);
+void desceHeap(p_fp fila, int k);
 void destroiCidades(p_grafo Cidades);
 void quickSort(p_no *vetor, int e, int d);
-int particiona(p_no *vetor, int e, int d);
-int pegaIndice(p_grafo cidades, char atual[50]);
+void insere(p_fp fila, int i, double dist, p_no cidade);
+void diminuiprioridade(p_fp fila, int i, double dist);
+double prioridade(p_fp fila, int k);
+p_fp criar_fprio(int tamanho);
+p_fp dijkstra(p_grafo cidades, int s);
 p_grafo criaCidades(int qtdCidades);
 p_grafo recebeCidades(int qtdCidades);
 p_grafo recebeArestas(p_grafo cidades);
@@ -44,22 +56,7 @@ p_grafo calcCentralidade(p_grafo cidades);
 p_grafo adicionaCidade(p_grafo cidades, int pos, char nome[50], int populacao);
 p_grafo adicionaAresta(p_grafo cidades, char cidade_1[50], char cidade_2[50], double dist);
 
-
-void imprimeFila(p_fp fila, int tam);
-p_fp dijkstra(p_grafo cidades, int s) ;
-int extrai_minimo(p_fp fila);
-void desceHeap(p_fp fila, int k);
-void insere(p_fp fila, int i, double dist, p_no cidade);
-p_fp criar_fprio(int tamanho);
-void diminuiprioridade(p_fp fila, int i, double dist);
-int vazia(p_fp fila);
-double prioridade(p_fp fila, int k);
-void troca(No *x, No *y);
-int procuraIndice(p_fp fila, char nome[50]);
-void destroiFP(p_fp fila);
-void sobeHeap(p_fp fila, int n);
-
-
+/*Recebe do scanf as informacoes das cidades e insere-as no graf atraves da funcao adicionaCidade.*/
 p_grafo recebeCidades(int qtdCidades){
     p_grafo cidades;
     int i, populacao;
@@ -74,6 +71,7 @@ p_grafo recebeCidades(int qtdCidades){
     return cidades;
 }
 
+/*Recebe do scanf as informacoes das cidades vizinhas e insere-as no grafo atraves da funcao adicionaAresta.*/
 p_grafo recebeArestas(p_grafo cidades){
     char cidade_1[50], cidade_2[50];
     double dist;
@@ -83,6 +81,8 @@ p_grafo recebeArestas(p_grafo cidades){
     return cidades;
 }
 
+/*Calcula a centralidade de cada cidade, com as menores distancias provindas da funcao Dijkstrta
+e verifica se uma cidade e apta ou nao para ser capital.*/
 p_grafo calcCentralidade(p_grafo cidades){  
     int i, j, populacaoTotal, populacaoAtendida;
     double divisor, dividendo;
@@ -91,7 +91,6 @@ p_grafo calcCentralidade(p_grafo cidades){
     for(i=0;i < cidades->tamanho;i++){ 
         divisor = 0.0; dividendo = 0.0; populacaoTotal = 0; populacaoAtendida = 0; 
         fila = dijkstra(cidades, i);
-
         for(j=0;j < cidades->tamanho;j++){ 
             populacaoTotal += fila->v[j].populacao;
             if(fila->v[j].dist != (double)INT_MAX){
@@ -114,13 +113,7 @@ p_grafo calcCentralidade(p_grafo cidades){
     return cidades;
 }
 
-// void imprimeFila(p_fp fila, int tam){  //apagasr dps
-//     int i;
-//     for(i=0;i < tam;i++){
-//         printf("%s %.2f\n", fila->v[i].nome, fila->v[i].dist);
-//     }
-// }
-
+/*Aloca memoria para o grafo de cidades.*/
 p_grafo criaCidades(int qtdCidades){
     p_grafo Cidades;
     int i;
@@ -134,6 +127,7 @@ p_grafo criaCidades(int qtdCidades){
     return Cidades;
 }
 
+/*Adiona uma nova cidade no grafo.*/
 p_grafo adicionaCidade(p_grafo cidades, int pos, char nome[50], int populacao){  
     p_no novo = malloc(sizeof(No));
     novo->populacao = populacao, novo->centralidade = 0.0; novo->dist = 0.0; 
@@ -143,6 +137,7 @@ p_grafo adicionaCidade(p_grafo cidades, int pos, char nome[50], int populacao){
     return cidades;
 }
 
+/*Adiciona uma aresta na lista de adjacencia do grafo das duas cidades envolvidas.*/
 p_grafo adicionaAresta(p_grafo cidades, char cidade_1[50], char cidade_2[50], double dist){  
     int ind_1, ind_2;
     p_no atual;
@@ -199,6 +194,8 @@ p_grafo adicionaAresta(p_grafo cidades, char cidade_1[50], char cidade_2[50], do
     return cidades;
 }
 
+/*Percorre todas a possibilidades de caminhos de uma cidade s ate as outras cidades e devolve uma fila de prioridades com os menores caminhos
+possiveis.*/
 p_fp dijkstra(p_grafo cidades, int s) {
     int i, ind, k;
     p_no atual;
@@ -207,7 +204,6 @@ p_fp dijkstra(p_grafo cidades, int s) {
     for(i=0;i < cidades->tamanho; i++) {
         insere(fila, i, (double)INT_MAX, cidades->adj[i]); 
     }
-
     diminuiprioridade(fila, s, 0); //diminui prioridade do vertice s para 0;
     while (!vazia(fila)) {  
         k = extrai_minimo(fila);  //pega o menor
@@ -224,6 +220,7 @@ p_fp dijkstra(p_grafo cidades, int s) {
     return fila;
 }
 
+/*Extrai o primeiro elemento do heap, que e o menor e joga-o para a ultima posicao.*/
 int extrai_minimo(p_fp fila){
     troca(&fila->v[0], &fila->v[fila->n-1]);
     fila->n--;
@@ -231,6 +228,7 @@ int extrai_minimo(p_fp fila){
     return fila->n;
 }
 
+/*Recebe a posicao k de um elemento e sobe-o no heap.*/
 void sobeHeap(p_fp fila, int n){
     if(n > 0 && fila->v[PAI(n)].dist > fila->v[n].dist){
         troca(&fila->v[n], &fila->v[PAI(n)]);
@@ -238,6 +236,7 @@ void sobeHeap(p_fp fila, int n){
     }
 }
 
+/*Recebe a posicao k de um elemento e desce-o no heap.*/
 void desceHeap(p_fp fila, int k){
     int menor;
     if(F_ESQ(k) < fila->n){
@@ -252,6 +251,7 @@ void desceHeap(p_fp fila, int k){
     }
 }
 
+/*Recebe as informacoes e coloca-as no No da fila de prioridades.*/
 void insere(p_fp fila, int i, double dist, p_no cidade){
     fila->v[i].populacao = cidade->populacao;  
     strcpy(fila->v[i].nome, cidade->nome);
@@ -260,6 +260,7 @@ void insere(p_fp fila, int i, double dist, p_no cidade){
     fila->n++;
 }
 
+/*Aloca memoria para a fila de prioridades.*/
 p_fp criar_fprio(int tamanho){
     p_fp fila = malloc(sizeof(FP));
     fila->v = malloc(tamanho*sizeof(No));
@@ -268,28 +269,33 @@ p_fp criar_fprio(int tamanho){
     return fila;
 }
 
+/*Substitui o valor da distacia do No i na fila prioridades e sobe-o no heap.*/
 void diminuiprioridade(p_fp fila, int i, double dist){ 
     fila->v[i].dist = dist;
     sobeHeap(fila, i);
 }
 
+/*Verifica se a fila de prioridades esta vazia e retorna.*/
 int vazia(p_fp fila){
-    if(fila->n == 0){   //ta vazia
+    if(fila->n == 0){  
         return 1;
     }
     return 0;
 }
 
+/*Devolve a prioridade 'dist' do Nó da posicao 'k'.*/
 double prioridade(p_fp fila, int k){
     return fila->v[k].dist;
 }
 
+/*Troca de posição dois Nós da fila de prioridades.*/
 void troca(No *x, No *y){
     No aux = *x;
     *x = *y;
     *y = aux;
 }
 
+/*Percorre a fila de prioridades e devolve o indice do no que tem o nome 'nome'.*/
 int procuraIndice(p_fp fila, char nome[50]){
     int i;
     for(i=0;i < fila->tamanho;i++){
@@ -342,6 +348,7 @@ int particiona(p_no *vetor, int e, int d){
     return pos-1;
 }
 
+/*Imprime as cidades que podem ser capitais e suas centralidades.*/
 void imprimir(p_grafo cidades){
     int i;
     for(i=0;i < cidades->tamanho;i++){
