@@ -102,16 +102,13 @@ int conferir_dicas_L(int **tabuleiro, int n, int lin){
             maior = tabuleiro[lin][i];
             qtd_predios += 1;
         }
-        if(tabuleiro[lin][0] < qtd_predios){ 
-            return 0;
     }
+    if(tabuleiro[lin][0] < qtd_predios){ 
+        return 0;
     }
-    // if(tabuleiro[lin][0] < qtd_predios){ 
-    //     return 0;
-    // }
-    // else{
+    else{
         return 1;
-    // }
+    }
 }
 
 int conferir_dicas_R(int **tabuleiro, int n, int lin){
@@ -148,16 +145,13 @@ int conferir_dicas_U(int **tabuleiro, int n, int col){
             maior = tabuleiro[i][col];
             qtd_predios += 1;
         }
-        if(tabuleiro[0][col] < qtd_predios){
-            return 0;
-        }
     }
-    // if(tabuleiro[0][col] < qtd_predios){
-    //     return 0;
-    // }
-    // else{
+    if(tabuleiro[0][col] < qtd_predios){
+        return 0;
+    }
+    else{
         return 1; 
-    // }
+    }
 }
 
 int conferir_dicas_D(int **tabuleiro, int n, int col){
