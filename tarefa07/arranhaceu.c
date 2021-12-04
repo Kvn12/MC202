@@ -75,18 +75,24 @@ int conferir(int **tabuleiro, int n, int lin, int col, int predio){
         }
     }
     tabuleiro[lin][col] = predio;
-    if(!conferir_dicas_L(tabuleiro, n, lin)){ //Confere com as dicas da esquerda na linha.
-        return 0;
-    }
+    // if(!conferir_dicas_L(tabuleiro, n, lin)){ //Confere com as dicas da esquerda na linha.
+    //     return 0;
+    // }
     if(col == n && !conferir_dicas_R(tabuleiro, n, lin)){ //Confere com as dicas da direita na linha.
-        return 0;
-    }
-    if(!conferir_dicas_U(tabuleiro, n, col)){ //Confere com as dicas de cima na coluna.
         return 0;
     }
     if(lin == n && !conferir_dicas_D(tabuleiro, n, col)){ //Confere com as dicas de baixo na coluna. 
         return 0;
     }
+    if(!conferir_dicas_L(tabuleiro, n, lin)){ //Confere com as dicas da esquerda na linha.
+        return 0;
+    }
+    if(!conferir_dicas_U(tabuleiro, n, col)){ //Confere com as dicas de cima na coluna.
+        return 0;
+    }
+    // if(lin == n && !conferir_dicas_D(tabuleiro, n, col)){ //Confere com as dicas de baixo na coluna. 
+    //     return 0;
+    // }
     return 1;
 }
 
