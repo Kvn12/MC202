@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 int conferir(int **tabuleiro, int n, int lin, int col, int predio);
-int conferir_dicas_L(int **tabuleiro, int n, int lin);
-int conferir_dicas_R(int **tabuleiro, int n, int lin);
-int conferir_dicas_U(int **tabuleiro, int n, int col);
-int conferir_dicas_D(int **tabuleiro, int n, int col);
+int conferir_dicas_L(int **tabuleiro, int n, int lin, int col);
+int conferir_dicas_R(int **tabuleiro, int n, int lin, int col);
+int conferir_dicas_U(int **tabuleiro, int n, int col, int lin);
+int conferir_dicas_D(int **tabuleiro, int n, int col, int lin);
 
 void recebe_dicas(int **tabuleiro, int n){
     //Recebe os valores do scanf em um ponteiro de ponteiros, uma matriz, que representa o tabuleiro do jogo.
@@ -62,35 +62,36 @@ int solucionaR(int **tabuleiro, int n, int lin, int col){
 int conferir(int **tabuleiro, int n, int lin, int col, int predio){
     //Recebe o tabuleiro e o valor a ser inserido, confere nas linhas e nas colunas se o valor não esta presente,
     //se não o estiver, adiciona-o e confere esse valor com as dicas.
-    int i, j;
+
+    // int i, j;
     
-    for(i=1;i < n+1;i++){ //ve se ta na linha
-        if(tabuleiro[lin][i]==predio){
-            return 0;
-        }
-    }
-    for(j=1;j < n+1;j++){ //ve se ta na coluna
-        if(tabuleiro[j][col]==predio){
-            return 0;
-        }
-    }
+    // for(i=1;i < n+1;i++){ //ve se ta na linha
+    //     if(tabuleiro[lin][i]==predio){
+    //         return 0;
+    //     }
+    // }
+    // for(j=1;j < n+1;j++){ //ve se ta na coluna
+    //     if(tabuleiro[j][col]==predio){
+    //         return 0;
+    //     }
+    // }
     tabuleiro[lin][col] = predio;
-    if(!conferir_dicas_L(tabuleiro, n, lin)){ //Confere com as dicas da esquerda na linha.
+    if(!conferir_dicas_L(tabuleiro, n, lin, col)){ //Confere com as dicas da esquerda na linha.
         return 0;
     }
-    if(!conferir_dicas_U(tabuleiro, n, col)){ //Confere com as dicas de cima na coluna.
+    if(!conferir_dicas_U(tabuleiro, n, col, lin)){ //Confere com as dicas de cima na coluna.
         return 0;
     }
-    if(col == n && !conferir_dicas_R(tabuleiro, n, lin)){ //Confere com as dicas da direita na linha.
+    if(col == n && !conferir_dicas_R(tabuleiro, n, lin, col)){ //Confere com as dicas da direita na linha.
         return 0;
     }
-    if(lin == n && !conferir_dicas_D(tabuleiro, n, col)){ //Confere com as dicas de baixo na coluna. 
+    if(lin == n && !conferir_dicas_D(tabuleiro, n, col, lin)){ //Confere com as dicas de baixo na coluna. 
         return 0;
     }
     return 1;
 }
 
-int conferir_dicas_L(int **tabuleiro, int n, int lin){
+int conferir_dicas_L(int **tabuleiro, int n, int lin, int col){
     //Procura quantos prédios são visíveis pela esquerda na linha. 
     //Se a quantidade de prédios visíveis for maior, retorna 0.
     int i, maior;
@@ -98,6 +99,9 @@ int conferir_dicas_L(int **tabuleiro, int n, int lin){
 
     maior = tabuleiro[lin][1];
     for(i=2;i < n+1;i++){
+        if(i-1 != col && tabuleiro[lin][i-1] == tabuleiro[lin][col]){
+            return 0;
+        }
         if(tabuleiro[lin][i] > maior){
             maior = tabuleiro[lin][i];
             qtd_predios += 1;
@@ -114,7 +118,7 @@ int conferir_dicas_L(int **tabuleiro, int n, int lin){
     // }
 }
 
-int conferir_dicas_R(int **tabuleiro, int n, int lin){
+int conferir_dicas_R(int **tabuleiro, int n, int lin, int col){
     //Procura quantos prédios são visíveis pela direita na linha. 
     //Se a quantidade de prédios visíveis for maior, retorna 0.
     int i, maior;
@@ -122,6 +126,9 @@ int conferir_dicas_R(int **tabuleiro, int n, int lin){
 
     maior = tabuleiro[lin][n];
     for(i=n-1;i > 0;i--){ 
+        if(i+1 != col && tabuleiro[lin][i+1] == tabuleiro[lin][col]){
+            return 0;
+        }
         if(tabuleiro[lin][i] > maior){
             maior = tabuleiro[lin][i];
             qtd_predios += 1;
@@ -139,7 +146,7 @@ int conferir_dicas_R(int **tabuleiro, int n, int lin){
     
 }
 
-int conferir_dicas_U(int **tabuleiro, int n, int col){
+int conferir_dicas_U(int **tabuleiro, int n, int col, int lin){
     //Procura quantos prédios são visíveis de cima para baixo na coluna. 
     //Se a quantidade de prédios visíveis for maior, retorna 0.
     int i, maior;
@@ -147,6 +154,9 @@ int conferir_dicas_U(int **tabuleiro, int n, int col){
 
     maior = tabuleiro[1][col];
     for(i=2;i < n+1;i++){
+        if(i-1 != lin && tabuleiro[i-1][col] == tabuleiro[lin][col]){
+            return 0;
+        }
         if(tabuleiro[i][col] > maior){
             maior = tabuleiro[i][col];
             qtd_predios += 1;
@@ -163,7 +173,7 @@ int conferir_dicas_U(int **tabuleiro, int n, int col){
     // }
 }
 
-int conferir_dicas_D(int **tabuleiro, int n, int col){
+int conferir_dicas_D(int **tabuleiro, int n, int col, int lin){
     //Procura quantos prédios são visíveis de baixo para cima na coluna. 
     //Se a quantidade de prédios visíveis for maior, retorna 0.
     int i, maior;
@@ -171,6 +181,9 @@ int conferir_dicas_D(int **tabuleiro, int n, int col){
 
     maior = tabuleiro[n][col];
     for(i=n-1;i > 0;i--){
+        if(i+1 != lin && tabuleiro[i+1][col] == tabuleiro[lin][col]){
+            return 0;
+        }
         if(tabuleiro[i][col] > maior){
             maior = tabuleiro[i][col];
             qtd_predios += 1;
