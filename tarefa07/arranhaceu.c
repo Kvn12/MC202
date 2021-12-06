@@ -114,15 +114,7 @@ int conferir_dicas_L(int **tabuleiro, int n, int lin, int col){
             return 0;
         }
     }
-    //     else{
-    //         return 0;
-    //     }
-    // }
-    // if(tabuleiro[lin][0] < qtd_predios){ 
-    //     return 0;
-    // }
-    
-        return 1;
+    return 1;
 
 }
 
@@ -176,12 +168,6 @@ int conferir_dicas_U(int **tabuleiro, int n, int col, int lin){
         }
     }
     return 1;
-    // if(tabuleiro[0][col] < qtd_predios){
-    //     return 0;
-    // }
-    // else{
-        // return 1; 
-    // }
 }
 
 int conferir_dicas_D(int **tabuleiro, int n, int col){
